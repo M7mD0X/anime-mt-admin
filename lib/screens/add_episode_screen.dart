@@ -37,7 +37,7 @@ class _AddEpisodeScreenState extends State<AddEpisodeScreen> {
     try {
       final response = await http.get(Uri.parse('$serverUrl/episodes/${widget.animeId}'));
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final data = jsonDecode(utf8.decode(response.bodyBytes));
         setState(() { episodes = data['results']; });
       }
     } catch (e) {}
