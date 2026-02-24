@@ -115,8 +115,10 @@ class _AnimeListScreenState extends State<AnimeListScreen> {
                               bottomLeft: Radius.circular(12),
                             ),
                             child: anime['cover'] != null && anime['cover'].isNotEmpty
-                                ? Image.network(anime['cover'], width: 70, height: 95, fit: BoxFit.cover,
-                                    errorBuilder: (c, e, s) => Container(width: 70, height: 95, color: Colors.grey[900],
+                                ? Image.network(anime['cover'],
+                                    width: 70, height: 95, fit: BoxFit.cover,
+                                    errorBuilder: (c, e, s) => Container(
+                                      width: 70, height: 95, color: Colors.grey[900],
                                       child: Icon(Icons.broken_image, color: Colors.grey)))
                                 : Container(width: 70, height: 95, color: Colors.grey[900],
                                     child: Icon(Icons.movie, color: Colors.grey)),
@@ -132,9 +134,13 @@ class _AnimeListScreenState extends State<AnimeListScreen> {
                                     style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
                                     maxLines: 2, overflow: TextOverflow.ellipsis),
                                   SizedBox(height: 4),
-                                  Text(anime['title_arabic'] ?? '',
+                                  Text(
+                                    anime['title_arabic'] ?? '',
                                     style: TextStyle(color: Colors.white38, fontSize: 11),
-                                    maxLines: 1, overflow: TextOverflow.ellipsis),
+                                    textDirection: TextDirection.rtl,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                   SizedBox(height: 4),
                                   Row(
                                     children: [
