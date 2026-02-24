@@ -36,7 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         headers: {'x-admin-key': adminKey},
       );
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final data = jsonDecode(utf8.decode(response.bodyBytes));
         setState(() {
           totalAnime = data['total'] ?? 0;
           isLoading = false;
