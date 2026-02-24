@@ -31,7 +31,7 @@ class _AnimeListScreenState extends State<AnimeListScreen> {
     try {
       final response = await http.get(Uri.parse('$serverUrl/anime?limit=100'));
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final data = jsonDecode(utf8.decode(response.bodyBytes));
         setState(() {
           animeList = data['results'];
           isLoading = false;
