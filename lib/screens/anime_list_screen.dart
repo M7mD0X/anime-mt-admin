@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'add_anime_screen.dart';
 import 'add_episode_screen.dart';
 
 class AnimeListScreen extends StatefulWidget {
@@ -51,7 +52,8 @@ class _AnimeListScreenState extends State<AnimeListScreen> {
         content: Text('Are you sure?', style: TextStyle(color: Colors.white70)),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context, false), child: Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: Text('Delete', style: TextStyle(color: Colors.red))),
+          TextButton(onPressed: () => Navigator.pop(context, true),
+            child: Text('Delete', style: TextStyle(color: Colors.red))),
         ],
       ),
     );
@@ -131,16 +133,14 @@ class _AnimeListScreenState extends State<AnimeListScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(anime['title'] ?? '',
-                                    style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
+                                    style: TextStyle(color: Colors.white, fontSize: 13,
+                                      fontWeight: FontWeight.bold),
                                     maxLines: 2, overflow: TextOverflow.ellipsis),
                                   SizedBox(height: 4),
-                                  Text(
-                                    anime['title_arabic'] ?? '',
+                                  Text(anime['title_arabic'] ?? '',
                                     style: TextStyle(color: Colors.white38, fontSize: 11),
                                     textDirection: TextDirection.rtl,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                    maxLines: 1, overflow: TextOverflow.ellipsis),
                                   SizedBox(height: 4),
                                   Row(
                                     children: [
@@ -156,6 +156,18 @@ class _AnimeListScreenState extends State<AnimeListScreen> {
                                       SizedBox(width: 6),
                                       Text('${anime['episodes_count'] ?? 0} eps',
                                         style: TextStyle(color: Colors.white38, fontSize: 10)),
+                                      if ((anime['aniwatch_id'] ?? '').isNotEmpty) ...[
+                                        SizedBox(width: 6),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                          decoration: BoxDecoration(
+                                            color: Colors.green.withOpacity(0.2),
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Text('AW',
+                                            style: TextStyle(color: Colors.green, fontSize: 10)),
+                                        ),
+                                      ],
                                     ],
                                   ),
                                 ],
@@ -165,7 +177,16 @@ class _AnimeListScreenState extends State<AnimeListScreen> {
                           Column(
                             children: [
                               IconButton(
-                                icon: Icon(Icons.add_circle, color: Colors.green, size: 22),
+                                icon: Icon(Icons.edit, color: Colors.blue, size: 20),
+                                onPressed: () async {
+                                  await Navigator.push(context,
+                                    MaterialPageRoute(builder: (_) =>
+                                      AddAnimeScreen(animeData: anime)));
+                                  loadAnime();
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.add_circle, color: Colors.green, size: 20),
                                 onPressed: () => Navigator.push(context,
                                   MaterialPageRoute(builder: (_) => AddEpisodeScreen(
                                     animeId: anime['id'],
@@ -173,7 +194,7 @@ class _AnimeListScreenState extends State<AnimeListScreen> {
                                   ))),
                               ),
                               IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red, size: 22),
+                                icon: Icon(Icons.delete, color: Colors.red, size: 20),
                                 onPressed: () => deleteAnime(anime['id']),
                               ),
                             ],
