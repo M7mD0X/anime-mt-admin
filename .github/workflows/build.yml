@@ -38,7 +38,7 @@ jobs:
 
       - name: Build project
         run: |
-          flutter create temp_app --project-name anime_mt_admin
+          flutter create temp_app --project-name anime_mt_admin --org com.animemt
           mkdir -p temp_app/lib/screens
           cp lib/main.dart temp_app/lib/main.dart
           cp lib/screens/login_screen.dart temp_app/lib/screens/login_screen.dart
@@ -54,6 +54,7 @@ jobs:
           flutter pub get
           dart run flutter_launcher_icons
           flutter build apk --release
+          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/AnimeMT-Admin.apk
 
       - name: Set version
         run: echo "VERSION=1.0.${{ github.run_number }}" >> $GITHUB_ENV
@@ -64,6 +65,6 @@ jobs:
           tag_name: v${{ env.VERSION }}
           name: "Anime MT Admin v${{ env.VERSION }}"
           body: "${{ github.event.inputs.version_note }}"
-          files: temp_app/build/app/outputs/flutter-apk/app-release.apk
+          files: temp_app/build/app/outputs/flutter-apk/AnimeMT-Admin.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
