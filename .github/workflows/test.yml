@@ -31,6 +31,7 @@ jobs:
       - name: Build project
         run: |
           flutter create temp_app --project-name anime_mt_admin --org com.animemt
+          sed -i 's/com.example.anime_mt_admin/com.animemt.anime_mt_admin/' temp_app/android/app/build.gradle
           mkdir -p temp_app/lib/screens
           cp lib/main.dart temp_app/lib/main.dart
           cp lib/screens/login_screen.dart temp_app/lib/screens/login_screen.dart
