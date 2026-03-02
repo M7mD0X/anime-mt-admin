@@ -1,0 +1,56 @@
+name: Test Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+          cache: true
+
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('**/*.gradle*') }}
+
+      - name: Build project
+        run: |
+          flutter create temp_app --project-name anime_mt_admin --org com.animemt
+          mkdir -p temp_app/lib/screens
+          cp lib/main.dart temp_app/lib/main.dart
+          cp lib/screens/login_screen.dart temp_app/lib/screens/login_screen.dart
+          cp lib/screens/dashboard_screen.dart temp_app/lib/screens/dashboard_screen.dart
+          cp lib/screens/add_anime_screen.dart temp_app/lib/screens/add_anime_screen.dart
+          cp lib/screens/anime_list_screen.dart temp_app/lib/screens/anime_list_screen.dart
+          cp lib/screens/add_episode_screen.dart temp_app/lib/screens/add_episode_screen.dart
+          cp pubspec.yaml temp_app/pubspec.yaml
+          cp icon.png temp_app/icon.png
+          sed -i 's/<manifest xmlns:android="http:\/\/schemas.android.com\/apk\/res\/android">/<manifest xmlns:android="http:\/\/schemas.android.com\/apk\/res\/android">\n    <uses-permission android:name="android.permission.INTERNET"\/>/' temp_app/android/app/src/main/AndroidManifest.xml
+          sed -i 's/android:label="anime_mt_admin"/android:label="Anime MT Admin"/' temp_app/android/app/src/main/AndroidManifest.xml
+          cd temp_app
+          flutter pub get
+          dart run flutter_launcher_icons
+          flutter build apk --debug
+          mv build/app/outputs/flutter-apk/app-debug.apk build/app/outputs/flutter-apk/AnimeMT-Admin-test.apk
+
+      - name: Upload Test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AnimeMT-Admin-test
+          path: temp_app/build/app/outputs/flutter-apk/AnimeMT-Admin-test.apk
+          retention-days: 7
